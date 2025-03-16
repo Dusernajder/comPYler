@@ -1,0 +1,8 @@
+*.dSYM/
+
+*.o
+*.obj
+
+*.exe
+*.out
+*.app
