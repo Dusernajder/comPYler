@@ -1,3 +1,4 @@
+#include <stdatomic.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -5,21 +6,23 @@
 
 #include "error/error.h"
 #include "scanner/scanner.h"
-#include "tokenizer/tokenizer.h"
+#include "tokenizer/token.h"
 
 extern bool hadError;
 
+void run(char *);
 void runFile(char *);
 void runPrompt();
-void run(char *);
+
+long getFileContentSize(FILE *);
 
 void run(char *source) {
+    Token tokens[256];
+    scanTokens(source, tokens);
+
     if (hadError) {
         exit(EXIT_FAILURE);
     }
-
-    TokenType tokens[256];
-    scanTokens(source, tokens);
 }
 
 void runFile(char *path) {
@@ -27,24 +30,22 @@ void runFile(char *path) {
 
     char *mode = "r";
     FILE *file_p = fopen(path, mode);
-    char line[256];
 
     if (file_p == NULL) {
         size_t errorMessageSize = 17 + strlen(path);
         char *errorMessage = malloc(errorMessageSize);
         snprintf(errorMessage, errorMessageSize, "File not found: %s", path);
         report(-1, path, "File not found");
+
+        exit(EXIT_FAILURE);
     }
 
-    for (size_t i = 0; fscanf(file_p, "%s", line) != EOF; i++) {
-        printf("\n%lu. line: %s\n", i, line);
-        run(line);
-    }
+    long fileContentSize = getFileContentSize(file_p);
 
-    /*while (fgets(line, sizeof(line), file_p) != NULL) {*/
-    /*    puts(line);*/
-    /*    run(line);*/
-    /*}*/
+    char *fileContent_p = malloc(fileContentSize);
+    fread(fileContent_p, 1, fileContentSize, file_p);
+
+    run(fileContent_p);
 
     fclose(file_p);
 }
@@ -68,6 +69,14 @@ void runPrompt() {
 
         free(line);
     }
+}
+
+long getFileContentSize(FILE *file_p) {
+    fseek(file_p, 0L, SEEK_END);
+    long fileContentSize = ftell(file_p);
+    fseek(file_p, 0L, SEEK_SET);
+
+    return fileContentSize;
 }
 
 int main(int argc, char *argv[argc + 1]) {
