@@ -3,7 +3,7 @@
 
 #include "error.h"
 
-bool hadError = false;
+bool had_error = false;
 
 void error(int line, char *message) {
     report(line, "", message);
@@ -11,5 +11,5 @@ void error(int line, char *message) {
 
 void report(int line, char *where, char *message) {
     printf("[Line \"%d\"] Error %s: %s", line, where, message);
-    hadError = true;
+    had_error = true;
 }
