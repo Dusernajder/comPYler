@@ -16,9 +16,9 @@ typedef enum {
     SLASH,
     STAR,
     // One or two character tokens
+    EQUAL = '=',
     BANG,
     BANG_EQUAL,
-    EQUAL,
     EQUAL_EQUAL,
     GREATER,
     GREATER_EQUAL,
