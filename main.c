@@ -6,7 +6,7 @@
 
 #include "error/error.h"
 #include "scanner/scanner.h"
-#include "tokenizer/token.h"
+#include "token/token.h"
 
 extern bool had_error;
 
@@ -70,7 +70,6 @@ void run_prompt() {
         printf("> ");
         scanf("%s", line);
 
-        int c = 2;
         bool val = strcmp(line, "\0");
 
         if (!strcmp(line, "\0")) {

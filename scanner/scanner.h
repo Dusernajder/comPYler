@@ -4,7 +4,7 @@
 #include <stddef.h>
 #include <stdio.h>
 
-#include "../tokenizer/token.h"
+#include "../token/token.h"
 
 void scanner_init(char *);
 void scan_tokens(Token[]);

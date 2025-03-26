@@ -1,4 +1,3 @@
-#include "scanner.h"
 #include <stdatomic.h>
 #include <stdbool.h>
 #include <stddef.h>
@@ -6,8 +5,9 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "scanner.h"
 #include "../error/error.h"
-#include "../tokenizer/token.h"
+#include "../token/token.h"
 
 static unsigned int source_length;
 static char *source;
