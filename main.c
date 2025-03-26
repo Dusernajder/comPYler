@@ -8,51 +8,65 @@
 #include "scanner/scanner.h"
 #include "tokenizer/token.h"
 
-extern bool hadError;
+extern bool had_error;
 
 void run(char *);
-void runFile(char *);
-void runPrompt();
+void run_file(char *);
+void run_prompt();
 
-long getFileContentSize(FILE *);
+long get_file_conent_size(FILE *);
 
 void run(char *source) {
     Token tokens[256];
-    scanTokens(source, tokens);
+    scanner_init(source);
+    scan_tokens(tokens);
 
-    if (hadError) {
+    if (had_error) {
         exit(EXIT_FAILURE);
     }
 }
 
-void runFile(char *path) {
+void run_file(char *path) {
     printf("Attempting to open: '%s'\n", path);
 
     char *mode = "r";
     FILE *file_p = fopen(path, mode);
 
     if (file_p == NULL) {
-        size_t errorMessageSize = 17 + strlen(path);
-        char *errorMessage = malloc(errorMessageSize);
-        snprintf(errorMessage, errorMessageSize, "File not found: %s", path);
+        size_t error_message_size = 17 + strlen(path);
+        char *error_message = malloc(error_message_size);
+        if (error_message == NULL) {
+            error(-1, "Memory allocation failed");
+            exit(EXIT_FAILURE);
+        }
+        snprintf(error_message, error_message_size, "File not found: %s", path);
         report(-1, path, "File not found");
 
         exit(EXIT_FAILURE);
     }
 
-    long fileContentSize = getFileContentSize(file_p);
+    long file_content_size = get_file_conent_size(file_p);
+    char *fileContent_p = malloc(file_content_size);
+    if (fileContent_p == NULL) {
+        error(-1, "Memory allocation failed");
+        exit(EXIT_FAILURE);
+    }
 
-    char *fileContent_p = malloc(fileContentSize);
-    fread(fileContent_p, 1, fileContentSize, file_p);
+    fread(fileContent_p, 1, file_content_size, file_p);
 
     run(fileContent_p);
 
     fclose(file_p);
 }
 
-void runPrompt() {
+void run_prompt() {
     for (;;) {
         char *line = malloc(256);
+        if (line == NULL) {
+            error(-1, "Memory allocation failed");
+            exit(EXIT_FAILURE);
+        }
+
         printf("> ");
         scanf("%s", line);
 
@@ -71,12 +85,12 @@ void runPrompt() {
     }
 }
 
-long getFileContentSize(FILE *file_p) {
+long get_file_conent_size(FILE *file_p) {
     fseek(file_p, 0L, SEEK_END);
-    long fileContentSize = ftell(file_p);
+    long file_content_size = ftell(file_p);
     fseek(file_p, 0L, SEEK_SET);
 
-    return fileContentSize;
+    return file_content_size;
 }
 
 int main(int argc, char *argv[argc + 1]) {
@@ -86,10 +100,10 @@ int main(int argc, char *argv[argc + 1]) {
     else if (argc == 1) {
         char *path = "/Volumes/SSD/projects/c/comPYler/script.py";
         /*char *path = argv[1];*/
-        runFile(path);
+        run_file(path);
     }
     else {
-        runPrompt();
+        run_prompt();
     }
 
     return EXIT_SUCCESS;
