@@ -6,9 +6,14 @@
 
 #include "../tokenizer/token.h"
 
-void scanTokens(char *, Token[]);
-char advance(char *, size_t *);
-bool isEOF(size_t, size_t);
-void addToken(TokenType, Token *, char *, char *);
+void scanner_init(char *);
+void scan_tokens(Token[]);
+bool match_char(char, char);
+char advance();
+char peek();
+char peek_next();
+bool is_EOF();
+void add_token(TokenType, Token *);
+void scan_token(Token *);
 
 #endif

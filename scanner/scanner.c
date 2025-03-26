@@ -1,4 +1,5 @@
 #include "scanner.h"
+#include <stdatomic.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdio.h>
@@ -7,61 +8,141 @@
 
 #include "../error/error.h"
 #include "../tokenizer/token.h"
-#include "../tokenizer/tokenizer.h"
 
-extern bool hadError;
+static unsigned int source_length;
+static char *source;
+static unsigned int line_number = 1;
+static size_t start;
+static size_t current;
 
-size_t lineNumber = 1;
-size_t start = 0;
-size_t current = 0;
+void scanner_init(char *input_source) {
+    start = 0;
+    current = 0;
+    source_length = strlen(source);
+    source = malloc(source_length + 1);
+    if (source == NULL) {
+        fprintf(stderr, "Memory allocation failed\n");
+        exit(1);
+    }
+    source = input_source;
+}
 
-void scanTokens(char *source, Token tokens_p[]) {
-    size_t sourceLength = strlen(source);
-    size_t counter = 0;
+void scan_tokens(Token tokens_p[]) {
 
-    while (!isEOF(current, sourceLength)) {
-
-        char *lexeme = malloc(current - start + 1);
-        lexeme = strncpy(lexeme, *(&source + start), current);
-
-        printf("Lexeme: %s\n", lexeme);
-
-        TokenType token = convertLexemeToToken(lexeme);
-
-        if (token == UNDEFINED) {
-            hadError = true;
-            error(lineNumber, strcat("Undefined Lexeme: ", lexeme));
-            break;
-        }
-        else {
-            addToken(token, &tokens_p[counter], lexeme, lexeme);
-            start = current;
-            counter++;
-        }
-
-        /*tokens_p[lineNumber] = token;*/
-
-        free(lexeme);
-        advance(source, &current);
+    for (unsigned int i = 0; !is_EOF(); i++) {
+        start = current;
+        scan_token(&tokens_p[i]);
     }
 
-    /*tokens_p[lineNumber + 1] = EOF_;*/
+    add_token(EOF_, &tokens_p[line_number]);
 }
 
-char advance(char *source, size_t *current) {
-    return source[*current++];
+bool match_char(char lexeme, char expected) {
+    if (is_EOF()) return false;
+    if (lexeme != expected) return false;
+
+    return true;
 }
 
-bool isEOF(size_t current, size_t sourceLength) {
-    return current >= sourceLength;
+char advance() {
+    char value = source[current];
+    current = current + 1;
+
+    return value;
 }
 
-void addToken(TokenType type, Token *tokenLocation_p, char *literal, char *lexeme) {
+char peek() {
+    if (is_EOF()) return '\0';
+
+    return source[current];
+}
+
+char peek_next() {
+    if (current + 1 >= source_length) return '\0';
+
+    return source[current + 1];
+}
+
+bool is_EOF() {
+    return current >= source_length;
+}
+
+void add_token(TokenType type, Token *token_location_p) {
+    char line[4];
+    sprintf(line, "%d", line_number);
+    char *literal = malloc(current - start + 1);
+    literal = strncpy(literal, *(&source + start), current);
+
     Token token = {
         .type = type,
         .lexeme = literal,
         .literal = literal,
-        .line = lineNumber};
+        .line = line_number,
+    };
 
-    *tokenLocation_p = token;
+    *token_location_p = token;
+}
+
+void scan_token(Token *token_p) {
+    char c = advance();
+
+    switch (c) {
+        case '(':
+            add_token(LEFT_PAREN, token_p);
+            break;
+        case ')':
+            add_token(RIGHT_PAREN, token_p);
+            break;
+        case '{':
+            add_token(LEFT_BRACE, token_p);
+            break;
+        case '}':
+            add_token(RIGHT_BRACE, token_p);
+            break;
+        case ',':
+            add_token(COMMA, token_p);
+            break;
+        case '.':
+            add_token(DOT, token_p);
+            break;
+        case '-':
+            add_token(MINUS, token_p);
+            break;
+        case '+':
+            add_token(PLUS, token_p);
+            break;
+        case ';':
+            add_token(SEMICOLON, token_p);
+            break;
+        case '*':
+            add_token(STAR, token_p);
+            break;
+        case '=':
+            add_token(match_char(c, EQUAL) ? EQUAL_EQUAL : EQUAL, token_p);
+            break;
+        case '!':
+            add_token(match_char(c, EQUAL) ? BANG_EQUAL : BANG, token_p);
+            break;
+        case '<':
+            add_token(match_char(c, EQUAL) ? LESS_EQUAL : LESS, token_p);
+        case '>':
+            add_token(match_char(c, EQUAL) ? GREATER_EQUAL : GREATER, token_p);
+        case '/':
+            if (match_char(c, '/')) {
+                while (peek() != '\n') { // possible segfault? (at file end)
+                    advance();
+                }
+                break;
+            }
+            add_token(SLASH, token_p);
+            break;
+        case ' ':
+        case '\r':
+        case '\n':
+            line_number++;
+            break;
+        default:
+            error(line_number, "Unexpected character.");
+            break;
+    }
 }
