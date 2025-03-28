@@ -8,6 +8,7 @@
 #include "scanner.h"
 #include "../error/error.h"
 #include "../token/token.h"
+#include "../utils/utils.h"
 
 static unsigned int source_length;
 static char *source;
@@ -20,10 +21,7 @@ void scanner_init(char *input_source) {
     current = 0;
     source_length = strlen(source);
     source = malloc(source_length + 1);
-    if (source == NULL) {
-        fprintf(stderr, "Memory allocation failed\n");
-        exit(1);
-    }
+    check_string_malloc(source);
     source = input_source;
 }
 
@@ -46,7 +44,7 @@ bool match_char(char lexeme, char expected) {
 
 char advance() {
     char value = source[current];
-    current = current + 1;
+    current++;
 
     return value;
 }
@@ -71,6 +69,7 @@ void add_token(TokenType type, Token *token_location_p) {
     char line[4];
     sprintf(line, "%d", line_number);
     char *literal = malloc(current - start + 1);
+    check_string_malloc(literal);
     literal = strncpy(literal, *(&source + start), current);
 
     Token token = {
