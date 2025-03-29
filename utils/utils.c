@@ -3,11 +3,11 @@
 
 #include "../error/error.h"
 
-bool check_string_malloc(char *string) {
-    if (string == NULL) {
+void *check_malloc(void *ptr) {
+    if (ptr == NULL) {
         error(-1, "Memory allocation failed");
         exit(EXIT_FAILURE);
     }
 
-    return true;
+    return ptr;
 }

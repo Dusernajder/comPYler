@@ -3,4 +3,4 @@
 
 #include "../error/error.h"
 
-bool check_string_malloc(char *);
+void *check_malloc(char *);
