@@ -7,13 +7,22 @@
 #include "../token/token.h"
 
 void scanner_init(char *);
+
 void scan_tokens(Token[]);
+void scan_token(Token *);
+void add_token(TokenType, Token *);
+
 bool match_char(char, char);
 char advance();
 char peek();
 char peek_next();
 bool is_EOF();
-void add_token(TokenType, Token *);
-void scan_token(Token *);
+
+char *string_literal();
+char *number_literal();
+char *identifier();
+
+bool is_alpha(char c);
+bool is_number(char c);
 
 #endif
