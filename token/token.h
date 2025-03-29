@@ -6,8 +6,8 @@ typedef enum {
     // Single characters tokens
     LEFT_PAREN,
     RIGHT_PAREN,
-    LEFT_BRACE,
-    RIGHT_BRACE,
+    LEFT_BRACKET,
+    RIGHT_BRACKET,
     COMMA,
     DOT,
     MINUS,
@@ -41,13 +41,20 @@ typedef enum {
     TRUE,
     VAR,
     WHILE,
+    // Literals.
+    IDENTIFIER,
+    STRING,
+    NUMBER,
+    // Escape character
+    TAB,
 
     EOF_,
-    UNDEFINED
+    UNDEFINED,
 
 } TokenType;
 
-typedef struct Token {
+typedef struct Token
+{
     TokenType type;
     char *lexeme;
     char *literal;
