@@ -14,7 +14,6 @@ extern bool had_error;
 void run(char *);
 void run_file(char *);
 void run_prompt();
-
 long get_file_conent_size(FILE *);
 
 void run(char *source) {
@@ -35,8 +34,7 @@ void run_file(char *path) {
 
     if (file_p == NULL) {
         size_t error_message_size = 17 + strlen(path);
-        char *error_message = malloc(error_message_size);
-        check_string_malloc(error_message);
+        char *error_message = check_malloc(malloc(error_message_size));
         snprintf(error_message, error_message_size, "File not found: %s", path);
         report(-1, path, "File not found");
 
@@ -44,8 +42,7 @@ void run_file(char *path) {
     }
 
     long file_content_size = get_file_conent_size(file_p);
-    char *fileContent_p = malloc(file_content_size);
-    check_string_malloc(fileContent_p);
+    char *fileContent_p = check_malloc(malloc(file_content_size));
 
     fread(fileContent_p, 1, file_content_size, file_p);
 
@@ -56,8 +53,7 @@ void run_file(char *path) {
 
 void run_prompt() {
     for (;;) {
-        char *line = malloc(256);
-        check_string_malloc(line);
+        char *line = check_malloc(malloc(256));
 
         printf("> ");
         scanf("%s", line);
