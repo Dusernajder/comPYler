@@ -1,4 +1,3 @@
-#include <cstdlib>
 #include <stdatomic.h>
 #include <stdbool.h>
 #include <stddef.h>
@@ -30,6 +29,10 @@ void scan_tokens(Token tokens_p[]) {
     for (unsigned int i = 0; !is_EOF(); i++) {
         start = current;
         scan_token(&(tokens_p[i]));
+
+        if (tokens_p[i].type == UNDEFINED) {
+            --i;
+        }
     }
 
     add_token(EOF_, &tokens_p[line_number]);
@@ -90,11 +93,6 @@ void add_token_literal(TokenType type, Token *token_location_p, char *literal) {
         size_t lexeme_length = strlen(literal + 2 + 1); // +2 for quotes, +1 for null terminator
         lexeme = check_malloc(malloc(lexeme_length));
         snprintf(lexeme, lexeme_length, "\"%s\"", literal);
-        lexeme[lexeme_length] = '\0';
-    }
-    if (type == NUMBER) { // TODO: Lookup generics
-        long double number;
-        sscanf(literal, "%Lf", &number);
     }
 
     Token token = {
@@ -115,14 +113,14 @@ char *string_literal() {
         advance();
     }
 
-    if (is_EOF()){
+    if (is_EOF()) {
         error(line_number, "string literal was not terminated.");
         exit(EXIT_FAILURE);
     }
 
     size_t literal_length = current - start;
     char *literal = check_malloc(malloc(literal_length + 1));
-    strncpy(literal, &source[start], literal_length);
+    strncpy(literal, &source[start + 1], literal_length);
 
     // closing "
     advance();
@@ -132,7 +130,7 @@ char *string_literal() {
 
 char *number_literal() {
     while (peek() != '\n') {
-        if (peek() == '.' && !is_number(peek_next())) {
+        if (peek() == '.' && !is_numeric(peek_next())) {
             break;
         }
         advance();
@@ -145,9 +143,16 @@ char *number_literal() {
     return literal;
 }
 
-char *identifier(){
-    
-    return "";
+char *identifier() {
+    while (is_alpha_numeric(peek())) {
+        advance();
+    }
+
+    size_t identifier_length = current - start;
+    char *identifier = check_malloc(malloc(identifier_length + 1));
+    strncpy(identifier, &source[start], identifier_length);
+
+    return identifier;
 }
 
 bool is_alpha(char c) {
@@ -156,7 +161,11 @@ bool is_alpha(char c) {
            c == '_';
 }
 
-bool is_number(char c) {
+bool is_alpha_numeric(char c) {
+    return is_alpha(c) || is_numeric(c);
+}
+
+bool is_numeric(char c) {
     return c >= '0' && c <= '9';
 }
 
@@ -212,22 +221,29 @@ void scan_token(Token *token_p) {
             add_token(SLASH, token_p);
             break;
         case ' ':
+            add_token(UNDEFINED, token_p);
+            break;
         case '\r':
+            add_token(UNDEFINED, token_p);
+            break;
         case '\t':
             add_token(TAB, token_p);
             break;
         case '\n':
+            add_token(UNDEFINED, token_p);
             line_number++;
             break;
         case '"':
             add_token_literal(STRING, token_p, string_literal());
             break;
         default:
-            if (is_number(c)){
-                number_literal();
+            if (is_numeric(c)) {
+                add_token_literal(NUMBER, token_p, number_literal());
+                break;
             }
-            else if ( is_alpha(c)){
-                identifier();
+            else if (is_alpha_numeric(c)) {
+                add_token_literal(IDENTIFIER, token_p, identifier());
+                break;
             }
             error(line_number, "Unexpected character.");
             break;

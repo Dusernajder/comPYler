@@ -22,7 +22,8 @@ char *string_literal();
 char *number_literal();
 char *identifier();
 
-bool is_alpha(char c);
-bool is_number(char c);
+bool is_alpha(char);
+bool is_numeric(char);
+bool is_alpha_numeric(char);
 
 #endif
