@@ -24,23 +24,23 @@ typedef enum {
     GREATER_EQUAL,
     LESS,
     LESS_EQUAL,
+    HASH,
     // Keywords.
     AND,
-    CLASS,
-    ELSE,
-    FALSE,
-    FUN,
-    FOR,
-    IF,
-    NIL,
     OR,
+    TRUE,
+    FALSE,
+    DEF,
+    FOR,
+    WHILE,
+    IF,
+    ELIF,
+    ELSE,
+    NIL,
+    CLASS,
     PRINT,
     RETURN,
-    SUPER,
-    THIS,
-    TRUE,
-    VAR,
-    WHILE,
+    SELF,
     // Literals.
     IDENTIFIER,
     STRING,
@@ -53,13 +53,19 @@ typedef enum {
 
 } TokenType;
 
-typedef struct Token
-{
+typedef struct Token {
     TokenType type;
     char *lexeme;
     char *literal;
     size_t line;
 } Token;
 
-void toString(Token, char *);
+typedef struct KeyTokenTypePair {
+    char *key;
+    TokenType type;
+} KeyTokenTypePair;
+
+TokenType get_token_type(char *);
+void to_string(Token, char *);
+
 #endif
