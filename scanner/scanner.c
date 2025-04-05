@@ -125,6 +125,21 @@ char *string_literal() {
     return literal;
 }
 
+char *number_literal() {
+    while (peek() != '\n') {
+        if (peek() == '.' && !is_numeric(peek_next())) {
+            break;
+        }
+        advance();
+    }
+
+    size_t literal_length = current - start;
+    char *literal = check_malloc(malloc(literal_length + 1));
+    strncpy(literal, &source[start], literal_length);
+
+    return literal;
+}
+
 char *identifier() {
     while (is_alpha_numeric(peek())) {
         advance();
