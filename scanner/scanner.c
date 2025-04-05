@@ -69,8 +69,8 @@ bool is_EOF() {
 }
 
 void add_token(TokenType type, Token *token_location_p) {
-    size_t literal_length = current - start + 1;
-    char *literal = check_malloc(malloc(literal_length));
+    size_t literal_length = current - start;
+    char *literal = check_malloc(malloc(literal_length + 1));
     strncpy(literal, &source[start], literal_length);
 
     literal[literal_length] = '\0';
@@ -83,14 +83,12 @@ void add_token(TokenType type, Token *token_location_p) {
     };
 
     *token_location_p = token;
-
-    free(token.lexeme);
 }
 
 void add_token_literal(TokenType type, Token *token_location_p, char *literal) {
     char *lexeme = NULL;
     if (type == STRING) {
-        size_t lexeme_length = strlen(literal + 2 + 1); // +2 for quotes, +1 for null terminator
+        size_t lexeme_length = strlen(literal) + 3; // +2 for quotes, +1 for null terminator
         lexeme = check_malloc(malloc(lexeme_length));
         snprintf(lexeme, lexeme_length, "\"%s\"", literal);
     }
@@ -103,8 +101,6 @@ void add_token_literal(TokenType type, Token *token_location_p, char *literal) {
     };
 
     *token_location_p = token;
-
-    free(token.lexeme);
 }
 
 char *string_literal() {
@@ -121,24 +117,10 @@ char *string_literal() {
     size_t literal_length = current - start;
     char *literal = check_malloc(malloc(literal_length + 1));
     strncpy(literal, &source[start + 1], literal_length);
+    literal[literal_length] = '\0';
 
     // closing "
     advance();
-
-    return literal;
-}
-
-char *number_literal() {
-    while (peek() != '\n') {
-        if (peek() == '.' && !is_numeric(peek_next())) {
-            break;
-        }
-        advance();
-    }
-
-    size_t literal_length = current - start;
-    char *literal = check_malloc(malloc(literal_length + 1));
-    strncpy(literal, &source[start], literal_length);
 
     return literal;
 }
@@ -151,6 +133,7 @@ char *identifier() {
     size_t identifier_length = current - start;
     char *identifier = check_malloc(malloc(identifier_length + 1));
     strncpy(identifier, &source[start], identifier_length);
+    identifier[identifier_length] = '\0';
 
     return identifier;
 }
