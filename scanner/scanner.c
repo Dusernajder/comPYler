@@ -211,14 +211,13 @@ void scan_token(Token *token_p) {
         case '>':
             add_token(match_char(c, EQUAL) ? GREATER_EQUAL : GREATER, token_p);
         case '/':
-            if (match_char(c, '/')) {
-                while (peek() != '\n') { // WARN: possible segfault? (at file end)
-                    advance();
-                }
-                add_token(SLASH, token_p);
-                break;
-            }
             add_token(SLASH, token_p);
+            break;
+        case '#':
+            add_token(HASH, token_p);
+            while (peek() != '\n') { // WARN: possible segfault? (at file end)
+                advance();
+            }
             break;
         case ' ':
             add_token(UNDEFINED, token_p);
@@ -242,7 +241,9 @@ void scan_token(Token *token_p) {
                 break;
             }
             else if (is_alpha_numeric(c)) {
-                add_token_literal(IDENTIFIER, token_p, identifier());
+                char *id = identifier();
+                TokenType type = get_token_type(id);
+                add_token_literal(type == UNDEFINED ? IDENTIFIER : type, token_p, id);
                 break;
             }
             error(line_number, "Unexpected character.");
