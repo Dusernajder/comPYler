@@ -8,7 +8,7 @@
 
 void scanner_init(char *);
 
-void scan_tokens(Token[]);
+void scan_tokens(Token[], unsigned int *);
 void scan_token(Token *);
 void add_token(TokenType, Token *);
 

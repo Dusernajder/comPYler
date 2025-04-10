@@ -17,9 +17,24 @@ void run_prompt();
 long get_file_conent_size(FILE *);
 
 void run(char *source) {
-    Token tokens[256];
+    size_t capacity = 256;
+    Token *tokens_buffer = malloc(sizeof(Token) * capacity);
+
     scanner_init(source);
-    scan_tokens(tokens);
+    unsigned int tokens_length = 0;
+    scan_tokens(tokens_buffer, &tokens_length);
+
+    Token *tokens = realloc(tokens_buffer, tokens_length);
+
+    /*for (unsigned int i = 0; i < 256; i++) {*/
+    /*    Token token = tokens[i];*/
+    /*    printf("%d\n", token.type);*/
+    /*    if (token.type == EOF_){*/
+    /*        printf("%d", i);*/
+    /*    }*/
+    /*}*/
+
+    free(tokens);
 
     if (had_error) {
         exit(EXIT_FAILURE);
@@ -48,6 +63,7 @@ void run_file(char *path) {
 
     run(fileContent_p);
 
+    free(fileContent_p);
     fclose(file_p);
 }
 

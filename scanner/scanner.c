@@ -22,20 +22,21 @@ void scanner_init(char *input_source) {
     source_length = strlen(input_source);
     source = check_malloc(malloc(source_length + 1));
     source = input_source;
+
+    source[source_length + 1] = '\0';
 }
 
-void scan_tokens(Token tokens_p[]) {
-
-    for (unsigned int i = 0; !is_EOF(); i++) {
+void scan_tokens(Token *tokens_p, unsigned int *tokens_length) {
+    for (; !is_EOF(); (*tokens_length)++) {
         start = current;
-        scan_token(&(tokens_p[i]));
+        scan_token(&(tokens_p[*tokens_length]));
 
-        if (tokens_p[i].type == UNDEFINED) {
-            --i;
+        if (tokens_p[*tokens_length].type == UNDEFINED) {
+            --*tokens_length;
         }
     }
 
-    add_token(EOF_, &tokens_p[line_number]);
+    add_token(EOF_, &tokens_p[*tokens_length + 1]);
 }
 
 bool match_char(char lexeme, char expected) {
@@ -199,7 +200,7 @@ void scan_token(Token *token_p) {
             add_token(STAR, token_p);
             break;
         case '=':
-            add_token(match_char(c, EQUAL) ? EQUAL_EQUAL : EQUAL, token_p);
+            add_token(match_char(c, EQUAL) ? EQUAL : EQUAL_EQUAL, token_p);
             break;
         case '!':
             add_token(match_char(c, EQUAL) ? BANG_EQUAL : BANG, token_p);
@@ -211,8 +212,11 @@ void scan_token(Token *token_p) {
         case '/':
             add_token(SLASH, token_p);
             break;
+        case ':':
+            add_token(COLON, token_p);
+            break;
         case '#':
-            add_token(HASH, token_p);
+            add_token(UNDEFINED, token_p);
             while (peek() != '\n') { // WARN: possible segfault? (at file end)
                 advance();
             }
@@ -227,7 +231,7 @@ void scan_token(Token *token_p) {
             add_token(TAB, token_p);
             break;
         case '\n':
-            add_token(UNDEFINED, token_p);
+            add_token(NEW_LINE, token_p);
             line_number++;
             break;
         case '"':
