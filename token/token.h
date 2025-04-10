@@ -25,6 +25,7 @@ typedef enum {
     LESS,
     LESS_EQUAL,
     HASH,
+    COLON,
     // Keywords.
     AND,
     OR,
@@ -47,6 +48,7 @@ typedef enum {
     NUMBER,
     // Escape character
     TAB,
+    NEW_LINE,
 
     EOF_,
     UNDEFINED,
