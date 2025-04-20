@@ -10,4 +10,7 @@
 .idea*
 
 comPYler
+generator
 ../*.o
+tmp/*
+.cache/*
