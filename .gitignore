@@ -10,7 +10,7 @@
 .idea*
 
 comPYler
-generator
+ast_generator
 ../*.o
 tmp/*
 .cache/*
