@@ -14,7 +14,7 @@ typedef struct Expression {
     Expression *right_p;
 } Expression;
 
-void define_ast(char *output_dir, char *file_name, size_t definitions_length, char *definitions[]);
+void define_ast(char *output_dir, char *file_name, size_t definitions_length, char *definitions[definitions_length]);
 void define_struct(FILE *header_file_p, char *struct_name, char *field_names);
 void fprintf_ln(FILE *file, const char *format, ...);
 

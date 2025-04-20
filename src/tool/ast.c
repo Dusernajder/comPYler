@@ -8,7 +8,7 @@
 #include "ast.h"
 #include "utils/utils.h"
 
-void define_ast(char *output_dir, char *file_name, size_t members_length, char *definitions[members_length]) {
+void define_ast(char *output_dir, char *file_name, size_t definitions_length, char *definitions[definitions_length]) {
     size_t path_length = strlen(output_dir) + strlen(file_name) + 4; // +4 = folder separator, null terminator and file extension
     char *header_path = (char *)check_malloc(malloc(path_length * sizeof(char)));
     char *source_path = (char *)check_malloc(malloc(path_length * sizeof(char)));
@@ -40,7 +40,7 @@ void define_ast(char *output_dir, char *file_name, size_t members_length, char *
     fprintf_ln(header_file_p, "");
 
     // ast structs
-    for (unsigned int i = 0; i < members_length; i++) {
+    for (unsigned int i = 0; i < definitions_length; i++) {
         char *definition = strdup(definitions[i]);
         char *struct_name = strtok(definition, " :");
         char *field_names = strtok(NULL, ":");
