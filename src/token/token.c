@@ -16,7 +16,7 @@ const KeyTokenTypePair keywords[] = {
     {"else", ELSE},
 };
 
-unsigned int keywords_size = sizeof(keywords) / sizeof(keywords[0]);
+const unsigned int keywords_size = sizeof(keywords) / sizeof(keywords[0]);
 
 TokenType try_get_keyword_type(char *keyword) {
     TokenType type = UNDEFINED;
