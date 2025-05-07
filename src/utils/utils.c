@@ -1,6 +1,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <sys/stat.h>
 
 #include "error/error.h"
@@ -26,4 +27,12 @@ void create_directory(char *directory) {
             exit(EXIT_FAILURE);
         }
     }
+}
+
+char *concat_str(const char *s1, const char *s2){
+    char *result = malloc(sizeof(s1) + sizeof(s2) + 1);
+    strcpy(result, s1);
+    strcat(result, s2);
+
+    return result;
 }
