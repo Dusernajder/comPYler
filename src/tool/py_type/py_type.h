@@ -21,11 +21,11 @@ typedef struct PyObject {
     } as;
 } PyObject;
 
-PyObject py_int(int value);
-PyObject py_decimal(double value);
-PyObject py_string(const char *value);
-PyObject py_bool(bool value);
-PyObject py_none();
+PyObject *py_int(int value);
+PyObject *py_decimal(double value);
+PyObject *py_string(const char *value);
+PyObject *py_bool(bool value);
+PyObject *py_none();
 
 void py_free(PyObject *object);
 
