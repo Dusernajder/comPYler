@@ -1,1 +1,122 @@
-[]
+[
+ {
+  "directory": "/Volumes/SSD/projects/c/comPYler",
+  "arguments": [
+   "clang",
+   "-g",
+   "-Wall",
+   "-Wextra",
+   "-Isrc",
+   "-c",
+   "src/main.c",
+   "-o",
+   "src/main.o"
+  ],
+  "file": "src/main.c"
+ },
+ {
+  "directory": "/Volumes/SSD/projects/c/comPYler",
+  "arguments": [
+   "clang",
+   "-g",
+   "-Wall",
+   "-Wextra",
+   "-Isrc",
+   "-c",
+   "src/scanner/scanner.c",
+   "-o",
+   "src/scanner/scanner.o"
+  ],
+  "file": "src/scanner/scanner.c"
+ },
+ {
+  "directory": "/Volumes/SSD/projects/c/comPYler",
+  "arguments": [
+   "clang",
+   "-g",
+   "-Wall",
+   "-Wextra",
+   "-Isrc",
+   "-c",
+   "src/token/token.c",
+   "-o",
+   "src/token/token.o"
+  ],
+  "file": "src/token/token.c"
+ },
+ {
+  "directory": "/Volumes/SSD/projects/c/comPYler",
+  "arguments": [
+   "clang",
+   "-g",
+   "-Wall",
+   "-Wextra",
+   "-Isrc",
+   "-c",
+   "src/error/error.c",
+   "-o",
+   "src/error/error.o"
+  ],
+  "file": "src/error/error.c"
+ },
+ {
+  "directory": "/Volumes/SSD/projects/c/comPYler",
+  "arguments": [
+   "clang",
+   "-g",
+   "-Wall",
+   "-Wextra",
+   "-Isrc",
+   "-c",
+   "src/utils/utils.c",
+   "-o",
+   "src/utils/utils.o"
+  ],
+  "file": "src/utils/utils.c"
+ },
+ {
+  "directory": "/Volumes/SSD/projects/c/comPYler",
+  "arguments": [
+   "clang",
+   "-g",
+   "-Wall",
+   "-Wextra",
+   "-Isrc",
+   "-c",
+   "src/tool/ast_generator.c",
+   "-o",
+   "src/tool/ast_generator.o"
+  ],
+  "file": "src/tool/ast_generator.c"
+ },
+ {
+  "directory": "/Volumes/SSD/projects/c/comPYler",
+  "arguments": [
+   "clang",
+   "-g",
+   "-Wall",
+   "-Wextra",
+   "-Isrc",
+   "-c",
+   "src/tool/ast.c",
+   "-o",
+   "src/tool/ast.o"
+  ],
+  "file": "src/tool/ast.c"
+ },
+ {
+  "directory": "/Volumes/SSD/projects/c/comPYler",
+  "arguments": [
+   "clang",
+   "-g",
+   "-Wall",
+   "-Wextra",
+   "-Isrc",
+   "-c",
+   "src/tool/py_type/py_type.c",
+   "-o",
+   "src/tool/py_type/py_type.o"
+  ],
+  "file": "src/tool/py_type/py_type.c"
+ }
+]
