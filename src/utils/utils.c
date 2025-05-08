@@ -1,3 +1,4 @@
+#include <stdarg.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -29,10 +30,18 @@ void create_directory(char *directory) {
     }
 }
 
-char *concat_str(const char *s1, const char *s2){
+char *concat_str(const char *s1, const char *s2) {
     char *result = malloc(sizeof(s1) + sizeof(s2) + 1);
     strcpy(result, s1);
     strcat(result, s2);
 
     return result;
+}
+
+void fprintf_ln(FILE *file, const char *format, ...) {
+    va_list args;
+    va_start(args, format);
+    vfprintf(file, format, args);
+    va_end(args);
+    fprintf(file, "\n");
 }
