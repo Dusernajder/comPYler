@@ -67,7 +67,7 @@ typedef struct KeyTokenTypePair {
     TokenType type;
 } KeyTokenTypePair;
 
-TokenType try_get_keyword_type(char *);
+TokenType try_get_keyword_type(const char *);
 void to_string(Token, char *);
 
 #endif

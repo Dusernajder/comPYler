@@ -18,7 +18,7 @@ const KeyTokenTypePair keywords[] = {
 
 const unsigned int keywords_size = sizeof(keywords) / sizeof(keywords[0]);
 
-TokenType try_get_keyword_type(char *keyword) {
+TokenType try_get_keyword_type(const char *keyword) {
     TokenType type = UNDEFINED;
     for (unsigned int i = 0; i < keywords_size; i++) {
         if (!strcmp(keywords[i].key, keyword)) {
