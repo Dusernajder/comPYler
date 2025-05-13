@@ -16,12 +16,12 @@ void *check_malloc(void *ptr) {
     return ptr;
 }
 
-bool is_directory_exists(char *directory) {
+bool is_directory_exists(const char *directory) {
     struct stat st;
     return (stat(directory, &st) == 0) && S_ISDIR(st.st_mode);
 }
 
-void create_directory(char *directory) {
+void create_directory(const char *directory) {
     if (!is_directory_exists(directory)) {
         if (mkdir(directory, 0755) != 0) {
             perror("mkdir failed");
@@ -30,7 +30,7 @@ void create_directory(char *directory) {
     }
 }
 
-char *concat_str(const char *s1, const char *s2) {
+char *concat_str(const char *s1, const char *s2, ...) {
     char *result = malloc(sizeof(s1) + sizeof(s2) + 1);
     strcpy(result, s1);
     strcat(result, s2);
